@@ -395,19 +395,19 @@ class OMRStreamlitApp:
                         st.write(f"- Attempted: {score.get('attempted_questions', 0)}")
     
     def show_dashboard_page(self):
-        """Show the results dashboard page."""
-        st.header("📈 Results Dashboard")
-        
-        # Get statistics from database
         stats = self.db_manager.get_statistics()
-        processing_time_stats = stats.get('processing_time_stats')
-        # Key metrics
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("Total Results", stats['total_results'])
         col2.metric("Average Accuracy", f"{stats['average_accuracy']:.1f}%")
-        col3.metric("Today's Results", len([r for r in stats['daily_results'] if r['date'] == datetime.now().strftime('%Y-%m-%d')]))
-        col4.metric("Processing Time", f"{processing_time_stats.get('avg_time', 0):.2f}s")
+        today = datetime.now().strftime('%Y-%m-%d')
+        todays_count = next((d['count'] for d in stats['daily_results'] if d['date'] == today), 0)
+        col3.metric("Today's Results", todays_count)
         
+        # Safely handle missing processing_time_stats
+        processing_time_stats = stats.get('processing_time_stats') or {}
+        avg_time = processing_time_stats.get('avg_time', 0.0)
+        col4.metric("Processing Time", f"{avg_time:.2f}s")
+
         # Charts
         if stats['daily_results']:
             st.subheader("📊 Daily Processing Volume")
