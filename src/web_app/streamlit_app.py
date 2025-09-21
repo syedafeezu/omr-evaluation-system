@@ -397,16 +397,24 @@ class OMRStreamlitApp:
     def show_dashboard_page(self):
         stats = self.db_manager.get_statistics()
         col1, col2, col3, col4 = st.columns(4)
-        col1.metric("Total Results", stats['total_results'])
-        col2.metric("Average Accuracy", f"{stats['average_accuracy']:.1f}%")
+        col1.metric("Total Results", stats.get('total_results', 0))
+        col2.metric("Average Accuracy", f"{stats.get('average_accuracy', 0.0):.1f}%")
+    
         today = datetime.now().strftime('%Y-%m-%d')
-        todays_count = next((d['count'] for d in stats['daily_results'] if d['date'] == today), 0)
+        todays_count = next((r['count'] for r in stats.get('daily_results', []) if r['date'] == today), 0)
         col3.metric("Today's Results", todays_count)
-        
-        # Safely handle missing processing_time_stats
+    
+        # Safely get processing time stats
         processing_time_stats = stats.get('processing_time_stats') or {}
-        avg_time = processing_time_stats.get('avg_time', 0.0)
+        avg_time = processing_time_stats.get('avg_time')
+        # Ensure avg_time is a float
+        try:
+            avg_time = float(avg_time)
+        except (TypeError, ValueError):
+            avg_time = 0.0
+    
         col4.metric("Processing Time", f"{avg_time:.2f}s")
+
 
         # Charts
         if stats['daily_results']:
