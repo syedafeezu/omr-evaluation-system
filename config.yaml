@@ -1,0 +1,76 @@
+image_processing:
+  max_image_width: 800
+  noise_reduction:
+    bilateral_filter_d: 9
+    bilateral_filter_sigma_color: 75
+    bilateral_filter_sigma_space: 75
+  contrast_enhancement:
+    clahe_clip_limit: 2.0
+    clahe_tile_grid_size: [8, 8]
+
+bubble_detection:
+  min_bubble_area: 50
+  max_bubble_area: 500
+  aspect_ratio_tolerance: 0.3
+  fill_threshold: 0.3
+  confidence_threshold: 0.7
+
+sheet_templates:
+  default:
+    total_questions: 100
+    questions_per_row: 4
+    question_region: [100, 150, 600, 800]
+    identifier_region: [50, 50, 200, 100]
+  SET_A:
+    total_questions: 100
+    questions_per_row: 4
+    question_region: [100, 150, 600, 800]
+    identifier_region: [50, 50, 200, 100]
+  SET_B:
+    total_questions: 100
+    questions_per_row: 4
+    question_region: [100, 150, 600, 800]
+    identifier_region: [50, 50, 200, 100]
+  SET_C:
+    total_questions: 100
+    questions_per_row: 4
+    question_region: [100, 150, 600, 800]
+    identifier_region: [50, 50, 200, 100]
+  SET_D:
+    total_questions: 100
+    questions_per_row: 4
+    question_region: [100, 150, 600, 800]
+    identifier_region: [50, 50, 200, 100]
+
+database:
+  type: sqlite
+  path: data/omr_results.db
+  backup_enabled: true
+  backup_interval_hours: 24
+
+web_app:
+  title: OMR Evaluation System
+  port: 8501
+  max_upload_size_mb: 50
+  allowed_file_types: [png, jpg, jpeg, pdf]
+  results_per_page: 20
+
+scoring:
+  subjects:
+    - Mathematics
+    - Physics
+    - Chemistry
+    - Biology
+    - English
+  questions_per_subject: 20
+  passing_threshold: 60
+
+export:
+  formats: [csv, xlsx, json]
+  include_student_details: true
+  include_answer_breakdown: true
+
+debug:
+  save_intermediate_images: false
+  log_level: INFO
+  enable_profiling: false
