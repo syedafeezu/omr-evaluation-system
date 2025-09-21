@@ -400,13 +400,13 @@ class OMRStreamlitApp:
         
         # Get statistics from database
         stats = self.db_manager.get_statistics()
-        
+        processing_time_stats = stats.get('processing_time_stats')
         # Key metrics
         col1, col2, col3, col4 = st.columns(4)
         col1.metric("Total Results", stats['total_results'])
         col2.metric("Average Accuracy", f"{stats['average_accuracy']:.1f}%")
         col3.metric("Today's Results", len([r for r in stats['daily_results'] if r['date'] == datetime.now().strftime('%Y-%m-%d')]))
-        col4.metric("Processing Time", f"{stats['processing_time_stats'].get('avg_time', 0):.2f}s")
+        col4.metric("Processing Time", f"{processing_time_stats.get('avg_time', 0):.2f}s")
         
         # Charts
         if stats['daily_results']:
